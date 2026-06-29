@@ -9,7 +9,9 @@ class MongooseDatabase {
 
   private async connectToDatabase() {
     try {
-      await mongoose.connect(config.MONGODB_URI);
+      await mongoose.connect(config.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000
+      });
       logger.info('Connected to the database using Mongoose.');
     } catch (err) {
       logger.error('Unable to connect to the database:', err);
