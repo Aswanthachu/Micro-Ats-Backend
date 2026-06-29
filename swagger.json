@@ -1,0 +1,616 @@
+{
+	"basePath": "/",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"mongoose.Types.ObjectId": {
+			"type": "string"
+		},
+		"IInterviewerSummary": {
+			"properties": {
+				"_id": {
+					"type": "object"
+				},
+				"name": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"name",
+				"email"
+			],
+			"type": "object",
+			"additionalProperties": true
+		},
+		"IInterviewSlotResponse": {
+			"properties": {
+				"_id": {
+					"type": "object"
+				},
+				"interviewerId": {
+					"type": "object"
+				},
+				"startTime": {
+					"type": "object"
+				},
+				"endTime": {
+					"type": "object"
+				},
+				"status": {
+					"type": "string",
+					"enum": [
+						"Scheduled",
+						"Cancelled"
+					],
+					"x-nullable": false
+				},
+				"funnelStatus": {
+					"type": "string",
+					"enum": [
+						"Applied",
+						"Technical Round",
+						"Offered"
+					],
+					"x-nullable": false
+				}
+			},
+			"required": [
+				"interviewerId",
+				"startTime",
+				"endTime"
+			],
+			"type": "object",
+			"additionalProperties": true
+		},
+		"ICandidateResponse": {
+			"properties": {
+				"_id": {
+					"type": "object"
+				},
+				"name": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"status": {
+					"type": "string",
+					"enum": [
+						"Applied",
+						"Technical Round",
+						"Offered"
+					],
+					"x-nullable": false
+				},
+				"interviewSlots": {
+					"items": {
+						"$ref": "#/definitions/IInterviewSlotResponse"
+					},
+					"type": "array"
+				},
+				"createdAt": {
+					"type": "object"
+				},
+				"updatedAt": {
+					"type": "object"
+				}
+			},
+			"required": [
+				"name",
+				"email",
+				"status",
+				"interviewSlots"
+			],
+			"type": "object",
+			"additionalProperties": true
+		},
+		"SchedulePostType": {
+			"properties": {
+				"funnelStatus": {
+					"type": "string",
+					"enum": [
+						"Applied",
+						"Technical Round",
+						"Offered"
+					],
+					"x-nullable": false
+				},
+				"endTime": {
+					"type": "string"
+				},
+				"startTime": {
+					"type": "string"
+				},
+				"interviewerId": {
+					"type": "string"
+				},
+				"candidateId": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"endTime",
+				"startTime",
+				"interviewerId",
+				"candidateId"
+			],
+			"type": "object"
+		},
+		"IInterviewerResponse": {
+			"properties": {
+				"_id": {
+					"type": "object"
+				},
+				"name": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"createdAt": {
+					"type": "object"
+				},
+				"updatedAt": {
+					"type": "object"
+				}
+			},
+			"required": [
+				"name",
+				"email"
+			],
+			"type": "object",
+			"additionalProperties": true
+		},
+		"InterviewerCreateType": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"email",
+				"name"
+			],
+			"type": "object"
+		},
+		"CandidateCreateType": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"email",
+				"name"
+			],
+			"type": "object"
+		}
+	},
+	"info": {
+		"title": "ecommerce",
+		"version": "1.0.0",
+		"description": "By Aswanth P N K",
+		"license": {
+			"name": "UNLICENSED"
+		},
+		"contact": {
+			"name": "Aswanth P N K"
+		}
+	},
+	"paths": {
+		"/api/schedule": {
+			"post": {
+				"operationId": "ScheduleInterview",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"conflictingCandidate": {
+									"type": "string",
+									"x-nullable": true
+								},
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"tags": [
+					"Schedule"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/SchedulePostType"
+						}
+					}
+				]
+			}
+		},
+		"/api/schedule/{candidateId}/{slotId}": {
+			"delete": {
+				"operationId": "CancelInterview",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"Schedule"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "candidateId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "path",
+						"name": "slotId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			},
+			"put": {
+				"operationId": "RescheduleInterview",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"conflictingCandidate": {
+									"type": "string",
+									"x-nullable": true
+								},
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"tags": [
+					"Schedule"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "candidateId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "path",
+						"name": "slotId",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"type": "object"
+					}
+				]
+			}
+		},
+		"/api/interviewer": {
+			"post": {
+				"operationId": "CreateInterviewer",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/IInterviewerResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"tags": [
+					"Interviewer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/InterviewerCreateType"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetAllInterviewers",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"items": {
+										"$ref": "#/definitions/IInterviewerResponse"
+									},
+									"type": "array"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"Interviewer"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/interviewer/{id}": {
+			"delete": {
+				"operationId": "DeleteInterviewer",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/IInterviewerResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"Interviewer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/api/candidate": {
+			"post": {
+				"operationId": "CreateCandidate",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"tags": [
+					"Candidate"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CandidateCreateType"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetAllCandidates",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"items": {
+										"$ref": "#/definitions/ICandidateResponse"
+									},
+									"type": "array"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"Candidate"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/candidate/{id}/status": {
+			"put": {
+				"operationId": "UpdateStatus",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"consumes": [
+					"application/json"
+				],
+				"tags": [
+					"Candidate"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"type": "object"
+					}
+				]
+			}
+		},
+		"/api/candidate/{id}": {
+			"delete": {
+				"operationId": "DeleteCandidate",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/ICandidateResponse"
+								}
+							},
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"Candidate"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {}
+}
