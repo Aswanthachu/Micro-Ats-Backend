@@ -4,11 +4,26 @@ import { format } from "date-fns";
 import path from "path";
 import fs from "fs";
 
-const logsDirectory = path.resolve(process.cwd(), "logs");
-if (!fs.existsSync(logsDirectory)) {
-  fs.mkdirSync(logsDirectory);
+const isVercel = !!process.env.VERCEL;
+let transports: winston.transport[] = [];
+
+if (isVercel) {
+  transports = [
+    new winston.transports.Console()
+  ];
+} else {
+  const logsDirectory = path.resolve(process.cwd(), "logs");
+  if (!fs.existsSync(logsDirectory)) {
+    fs.mkdirSync(logsDirectory);
+  }
+  const logFileName = `${format(new Date(), "yyyy-MM-dd")}.log`;
+  transports = [
+    new winston.transports.Console(),
+    new winston.transports.File({
+      filename: path.join(logsDirectory, logFileName),
+    }),
+  ];
 }
-const logFileName = `${format(new Date(), "yyyy-MM-dd")}.log`;
 
 const logger = winston.createLogger({
   level: "info",
@@ -16,19 +31,11 @@ const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.simple()
   ),
-  transports: [
-    new winston.transports.File({
-      filename: path.join(logsDirectory, logFileName),
-    }),
-  ],
+  transports: transports,
 });
 
 const expressLogger = expressWinston.logger({
-  transports: [
-    new winston.transports.File({
-      filename: path.join(logsDirectory, logFileName),
-    }),
-  ],
+  transports: transports,
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.simple()
