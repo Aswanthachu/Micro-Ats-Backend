@@ -13,7 +13,9 @@ class MongooseDatabase {
       logger.info('Connected to the database using Mongoose.');
     } catch (err) {
       logger.error('Unable to connect to the database:', err);
-      process.exit(1);
+      if (!process.env.VERCEL) {
+        process.exit(1);
+      }
     }
   }
 

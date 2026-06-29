@@ -4,7 +4,10 @@ import swaggerDocument from "../../../swagger.json";
 
 class swaggerSetup {
   public static init(app: Application): void {
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    const options = {
+      customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css"
+    };
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
   }
 }
 export default swaggerSetup;

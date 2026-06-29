@@ -8,6 +8,7 @@ import { config } from './src/helper/config/globalConfig';
 import MongooseDatabase from './src/helper/db/mongooseDatabase';
 import { expressLogger, logger } from './src/helper/utils/logger';
 import SwaggerDoc from './src/helper/utils/swaggerSetup';
+import mongoose from 'mongoose';
 
 class App {
   public app: Application;
@@ -37,6 +38,17 @@ class App {
 
   protected routes(): void {
     SwaggerDoc.init(this.app);
+
+    this.app.get('/health', (req, res) => {
+      const dbStatus = mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED';
+      res.status(200).json({
+        status: 'UP',
+        database: dbStatus,
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+      });
+    });
+
     RegisterRoutes(this.app);
   }
 }
