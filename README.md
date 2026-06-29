@@ -2,6 +2,15 @@
 
 This repository implements a modular, high-performance Technical Interview Scheduler with anti-collision validation rules to prevent double-booking technical interviewers.
 
+---
+
+## Deployed Links
+* **Frontend Dashboard**: [https://micro-ats-frontend-three.vercel.app/](https://micro-ats-frontend-three.vercel.app/)
+* **Backend API**: [https://micro-ats-backend.vercel.app/](https://micro-ats-backend.vercel.app/)
+* **Swagger API Documentation**: [https://micro-ats-backend.vercel.app/api-docs](https://micro-ats-backend.vercel.app/api-docs)
+
+---
+
 ## Technology Stack (Backend)
 * **Core**: Node.js & Express
 * **Language**: TypeScript (strictly typed, zero `any` usage)
@@ -66,7 +75,8 @@ The backend API is now running locally at `http://localhost:4545`.
 
 TSOA automatically generates the OpenAPI specification based on TypeScript controllers. 
 
-* **Swagger UI Route**: Open `http://localhost:4545/docs/` in your browser to view and interact with endpoints.
+* **Swagger UI Route**: Open `http://localhost:4545/api-docs` in your browser to view and interact with endpoints.
+* **Deployed Swagger UI**: Open [https://micro-ats-backend.vercel.app/api-docs](https://micro-ats-backend.vercel.app/api-docs) to view and interact with the deployed API endpoints.
 * **OpenAPI Schema location**: The JSON spec file is generated at `swagger.json` at the root of the project.
 * **To manually regenerate schemas**:
   ```bash
