@@ -24,7 +24,27 @@ class App {
   }
 
   protected configureCORS(): void {
-    this.app.use(cors());
+    const allowedOrigins = [
+      'https://micro-ats-frontend-three.vercel.app',
+      'http://localhost:3000',
+    ];
+
+    this.app.use(
+      cors({
+        origin: (origin, callback) => {
+          if (!origin) {
+            return callback(null, true);
+          }
+          const originWithoutSlash = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+          const isAllowed = allowedOrigins.some(allowed => {
+            const allowedWithoutSlash = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+            return allowedWithoutSlash === originWithoutSlash;
+          });
+          callback(null, isAllowed);
+        },
+        credentials: true,
+      })
+    );
   }
 
   protected plugins(): void {
